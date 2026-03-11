@@ -1,7 +1,9 @@
+import os
+
 import dash
 from dash import html, dcc, Input, Output, State
 import dash_bootstrap_components as dbc
-import os
+
 from flask import Flask
 from flask_login import LoginManager, UserMixin, login_user, logout_user, current_user
 
@@ -25,12 +27,11 @@ from callbacks import (
 )
 
 # -----------------------------------
-# Flask server
+# Flask server (WSGI)
 # -----------------------------------
 
 server = Flask(__name__)
 server.secret_key = Config.SECRET_KEY
-
 
 # -----------------------------------
 # Inicializar cache
@@ -38,14 +39,12 @@ server.secret_key = Config.SECRET_KEY
 
 init_cache(server, Config)
 
-
 # -----------------------------------
 # Flask-Login setup
 # -----------------------------------
 
 login_manager = LoginManager()
 login_manager.init_app(server)
-
 
 class User(UserMixin):
 
@@ -61,7 +60,6 @@ def load_user(user_id):
 
     return None
 
-
 # -----------------------------------
 # Dash app
 # -----------------------------------
@@ -73,9 +71,11 @@ app = dash.Dash(
     external_stylesheets=[dbc.themes.BOOTSTRAP],
 )
 
+# referencia explícita para Gunicorn
+server = app.server
+
 # layout global
 app.layout = layout
-
 
 # -----------------------------------
 # Registrar callbacks externos
@@ -83,7 +83,6 @@ app.layout = layout
 
 register_performance_callbacks(app)
 register_market_value_callbacks(app)
-
 
 # -----------------------------------
 # Layout login
@@ -128,7 +127,6 @@ login_layout = dbc.Container(
 
 )
 
-
 # -----------------------------------
 # LOGIN callback
 # -----------------------------------
@@ -155,7 +153,6 @@ def login(n_clicks, username, password):
 
     return dash.no_update, "Usuario o contraseña incorrectos"
 
-
 # -----------------------------------
 # Router protegido
 # -----------------------------------
@@ -172,23 +169,18 @@ def display_page(pathname):
         return login_layout
 
     if not current_user.is_authenticated:
-
         return login_layout
 
     if pathname == "/home":
-
         page = home.layout
 
     elif pathname == "/performance":
-
         page = performance.layout
 
     elif pathname == "/market_value":
-
         page = market_value.layout
 
     else:
-
         page = home.layout
 
     return html.Div(
@@ -198,11 +190,11 @@ def display_page(pathname):
         ]
     )
 
-
 # -----------------------------------
-# Run
+# Run local
 # -----------------------------------
 
 if __name__ == "__main__":
+
     port = int(os.environ.get("PORT", 8080))
     app.run(host="0.0.0.0", port=port)
