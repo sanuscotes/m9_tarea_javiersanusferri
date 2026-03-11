@@ -1,5 +1,4 @@
 from dash import html, dcc
-from components.navbar import navbar
 
 layout = html.Div(
 
