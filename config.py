@@ -17,5 +17,5 @@ class Config:
     DATA_PATH = os.getenv("DATA_PATH")
 
     # cache
-    CACHE_TYPE = os.getenv("CACHE_TYPE")
+    CACHE_TYPE = os.getenv("CACHE_TYPE", "simple")
     CACHE_DEFAULT_TIMEOUT = int(os.getenv("CACHE_DEFAULT_TIMEOUT", 300))
