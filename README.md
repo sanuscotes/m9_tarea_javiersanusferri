@@ -49,7 +49,7 @@ python app.py
 Una vez iniciada la aplicación, abrir el navegador y acceder con el usuario y contraseña 'admin' a:
 
 ```
-http://127.0.0.1:8050/
+http://127.0.0.1:8080/
 ```
 
 # Estructura básica del proyecto

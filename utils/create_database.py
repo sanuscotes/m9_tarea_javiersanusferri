@@ -1,17 +1,18 @@
+# Importamos las librerías necesarias
 import pandas as pd
 import sqlite3
 
-# rutas
+# Definimos las rutas
 csv_path = "data/market_value.csv"
 db_path = "data/players.db"
 
-# cargar csv
+# Cargar csv
 df = pd.read_csv(csv_path, sep=";")
 
-# conectar a sqlite
+# Conectar a sqlite
 conn = sqlite3.connect(db_path)
 
-# guardar tabla
+# Guardar tabla
 df.to_sql(
     "players_market_value",
     conn,
@@ -19,7 +20,7 @@ df.to_sql(
     index=False
 )
 
-# cerrar conexión
+# Cerramos la conexión
 conn.close()
 
 print("Base de datos creada correctamente")
